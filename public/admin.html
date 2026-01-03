@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSU Chat - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fb;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            font-size: 28px;
+        }
+
+        .admin-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: white;
+            color: #f5576c;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-color: #f5576c;
+            color: white;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .user-table th {
+            background: #f5f7fb;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-inactive {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .btn-deactivate {
+            background: #ff9800;
+        }
+
+        .btn-activate {
+            background: #4CAF50;
+        }
+
+        .filter-words-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .filter-word {
+            padding: 8px 16px;
+            background: #f5f7fb;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .remove-word {
+            cursor: pointer;
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .super-admin-only {
+            display: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>🛡️ Admin Panel</h1>
+                <p id="admin-name">Administrator</p>
+            </div>
+            <button class="btn-logout" onclick="logout()">Çıxış</button>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('dashboard')">📊 Dashboard</div>
+            <div class="tab" onclick="switchTab('users')">👥 İstifadəçilər</div>
+            <div class="tab" onclick="switchTab('rules')">📜 Qaydalar</div>
+            <div class="tab" onclick="switchTab('topic')">📌 Günün Mövzusu</div>
+            <div class="tab" onclick="switchTab('filter')">🔒 Filtr</div>
+            <div class="tab" onclick="switchTab('auto-delete')">⏰ Avtomatik Silmə</div>
+            <div class="tab" onclick="switchTab('reports')">⚠️ Şikayətlər</div>
+            <div class="tab super-admin-only" onclick="switchTab('admins')" id="admins-tab">👑 Adminlər</div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard-section" class="section active">
+            <h2>📊 Dashboard</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-users">0</div>
+                    <div class="stat-label">Ümumi İstifadəçilər</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="active-users">0</div>
+                    <div class="stat-label">Aktiv İstifadəçilər</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="reported-users">0</div>
+                    <div class="stat-label">Şikayət Edilənlər</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users -->
+        <div id="users-section" class="section">
+            <h2>👥 İstifadəçilər (<span id="users-count">0</span>)</h2>
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Fakültə</th>
+                            <th>Dərəcə</th>
+                            <th>Kurs</th>
+                            <th>Status</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="8" style="text-align: center;">Yüklənir...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rules -->
+        <div id="rules-section" class="section">
+            <h2>📜 Qaydalar</h2>
+            <div class="message" id="rules-message"></div>
+            <form id="rules-form">
+                <div class="form-group">
+                    <label>Qaydalar</label>
+                    <textarea id="rules-textarea" placeholder="Qaydaları daxil edin..."></textarea>
+                </div>
+                <button type="submit" class="btn">Yadda saxla</button>
+            </form>
+        </div>
+
+        <!-- Daily Topic -->
+        <div id="topic-section" class="section">
+            <h2>📌 Günün Mövzusu</h2>
+            <div class="message" id="topic-message"></div>
+            <form id="topic-form">
+                <div class="form-group">
+                    <label>Günün Mövzusu</label>
+                    <input type="text" id="topic-input" placeholder="Bu gün nəyə fokuslanaq?" maxlength="200">
+                </div>
+                <button type="submit" class="btn">Yadda saxla</button>
+            </form>
+        </div>
+
+        <!-- Filter Words -->
+        <div id="filter-section" class="section">
+            <h2>🔒 Sözlərin Filtrlənməsi</h2>
+            <div class="message" id="filter-message"></div>
+            <div class="form-group">
+                <label>Yeni söz əlavə et</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="filter-word-input" placeholder="Filtr ediləcək söz">
+                    <button type="button" class="btn btn-success" onclick="addFilterWord()">Əlavə et</button>
+                </div>
+            </div>
+            <div class="filter-words-list" id="filter-words-list">
+                <!-- Filter words will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Auto Delete -->
+        <div id="auto-delete-section" class="section">
+            <h2>⏰ Avtomatik Mesaj Silmə</h2>
+            <div class="message" id="auto-delete-message"></div>
+            <form id="auto-delete-form">
+                <div class="form-group">
+                    <label>Qrup mesajları (saat)</label>
+                    <input type="number" id="group-hours" min="0" placeholder="0 = söndürülüb">
+                    <small style="color: #666;">Qrup mesajları neçə saat sonra silinsin? (0 = heç vaxt)</small>
+                </div>
+                <div class="form-group">
+                    <label>Şəxsi mesajlar (saat)</label>
+                    <input type="number" id="private-hours" min="0" placeholder="0 = söndürülüb">
+                    <small style="color: #666;">Şəxsi mesajlar neçə saat sonra silinsin? (0 = heç vaxt)</small>
+                </div>
+                <button type="submit" class="btn">Yadda saxla</button>
+            </form>
+        </div>
+
+        <!-- Reports -->
+        <div id="reports-section" class="section">
+            <h2>⚠️ Şikayət Edilən İstifadəçilər (16+ şikayət)</h2>
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Email</th>
+                            <th>Fakültə</th>
+                            <th>Şikayət Sayı</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reports-table-body">
+                        <tr><td colspan="5" style="text-align: center;">Yüklənir...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Admins (Super Admin Only) -->
+        <div id="admins-section" class="section super-admin-only">
+            <h2>👑 Adminlər</h2>
+            <div class="message" id="admins-message"></div>
+            
+            <form id="create-admin-form" style="margin-bottom: 30px; padding: 20px; background: #f5f7fb; border-radius: 10px;">
+                <h3 style="margin-bottom: 15px;">Yeni Admin Yarat</h3>
+                <div class="form-group">
+                    <label>İstifadəçi adı</label>
+                    <input type="text" id="new-admin-username" placeholder="Admin istifadəçi adı" required>
+                </div>
+                <div class="form-group">
+                    <label>Şifrə</label>
+                    <input type="password" id="new-admin-password" placeholder="Admin şifrəsi" required>
+                </div>
+                <button type="submit" class="btn btn-success">Admin Yarat</button>
+            </form>
+
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>İstifadəçi adı</th>
+                            <th>Rol</th>
+                            <th>Yaradılma tarixi</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admins-table-body">
+                        <tr><td colspan="4" style="text-align: center;">Yüklənir...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>

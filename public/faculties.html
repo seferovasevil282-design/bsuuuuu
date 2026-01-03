@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSU Chat - Fakültələr</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .user-details p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-rules {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-logout {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .daily-topic {
+            background: #fffbea;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .daily-topic h3 {
+            color: #92400e;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .daily-topic p {
+            color: #78350f;
+            font-size: 14px;
+        }
+
+        .faculties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .faculty-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .faculty-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .faculty-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .faculty-corpus {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .close-modal {
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .rules-content {
+            color: #666;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .faculties-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="user-info">
+                <div class="user-avatar" id="user-avatar">
+                    <span id="avatar-initials"></span>
+                </div>
+                <div class="user-details">
+                    <h3 id="user-name">İstifadəçi</h3>
+                    <p id="user-info"></p>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-rules" onclick="showRules()">📜 Qaydalar</button>
+            <button class="btn btn-logout" onclick="logout()">🚪 Çıxış</button>
+        </div>
+    </div>
+
+    <div class="daily-topic" id="daily-topic" style="display: none;">
+        <h3>📌 Günün Mövzusu</h3>
+        <p id="daily-topic-text"></p>
+    </div>
+
+    <div class="faculties-grid">
+        <a href="/chat?faculty=Mexanika-riyaziyyat fakültəsi" class="faculty-card">
+            <div class="faculty-icon">📐</div>
+            <div class="faculty-name">Mexanika-riyaziyyat fakültəsi</div>
+            <div class="faculty-corpus">📍 3-cü korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Tətbiqi riyaziyyat və kibernetika fakültəsi" class="faculty-card">
+            <div class="faculty-icon">💻</div>
+            <div class="faculty-name">Tətbiqi riyaziyyat və kibernetika fakültəsi</div>
+            <div class="faculty-corpus">📍 3-cü korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Fizika fakültəsi" class="faculty-card">
+            <div class="faculty-icon">⚛️</div>
+            <div class="faculty-name">Fizika fakültəsi</div>
+            <div class="faculty-corpus">📍 Əsas korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Kimya fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🧪</div>
+            <div class="faculty-name">Kimya fakültəsi</div>
+            <div class="faculty-corpus">📍 Əsas korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Biologiya fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🔬</div>
+            <div class="faculty-name">Biologiya fakültəsi</div>
+            <div class="faculty-corpus">📍 Əsas korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Ekologiya və torpaqşünaslıq fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🌱</div>
+            <div class="faculty-name">Ekologiya və torpaqşünaslıq fakültəsi</div>
+            <div class="faculty-corpus">📍 Əsas korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Coğrafiya fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🗺️</div>
+            <div class="faculty-name">Coğrafiya fakültəsi</div>
+            <div class="faculty-corpus">📍 Əsas korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Geologiya fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🏔️</div>
+            <div class="faculty-name">Geologiya fakültəsi</div>
+            <div class="faculty-corpus">📍 Əsas korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Filologiya fakültəsi" class="faculty-card">
+            <div class="faculty-icon">📚</div>
+            <div class="faculty-name">Filologiya fakültəsi</div>
+            <div class="faculty-corpus">📍 1-ci korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Tarix fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🏛️</div>
+            <div class="faculty-name">Tarix fakültəsi</div>
+            <div class="faculty-corpus">📍 3-cü korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Beynəlxalq münasibətlər və iqtisadiyyat fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🌍</div>
+            <div class="faculty-name">Beynəlxalq münasibətlər və iqtisadiyyat fakültəsi</div>
+            <div class="faculty-corpus">📍 1-ci korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Hüquq fakültəsi" class="faculty-card">
+            <div class="faculty-icon">⚖️</div>
+            <div class="faculty-name">Hüquq fakültəsi</div>
+            <div class="faculty-corpus">📍 1-ci korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Jurnalistika fakültəsi" class="faculty-card">
+            <div class="faculty-icon">📰</div>
+            <div class="faculty-name">Jurnalistika fakültəsi</div>
+            <div class="faculty-corpus">📍 2-ci korpus</div>
+        </a>
+
+        <a href="/chat?faculty=İnformasiya və sənəd menecmenti fakültəsi" class="faculty-card">
+            <div class="faculty-icon">📁</div>
+            <div class="faculty-name">İnformasiya və sənəd menecmenti fakültəsi</div>
+            <div class="faculty-corpus">📍 2-ci korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Şərqşünaslıq fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🕌</div>
+            <div class="faculty-name">Şərqşünaslıq fakültəsi</div>
+            <div class="faculty-corpus">📍 2-ci korpus</div>
+        </a>
+
+        <a href="/chat?faculty=Sosial elmlər və psixologiya fakültəsi" class="faculty-card">
+            <div class="faculty-icon">🧠</div>
+            <div class="faculty-name">Sosial elmlər və psixologiya fakültəsi</div>
+            <div class="faculty-corpus">📍 2-ci korpus</div>
+        </a>
+    </div>
+
+    <!-- Rules Modal -->
+    <div class="modal" id="rules-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📜 Qaydalar</h2>
+                <span class="close-modal" onclick="closeRules()">&times;</span>
+            </div>
+            <div class="rules-content" id="rules-content">
+                Qaydalar yüklənir...
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/faculties.js"></script>
+</body>
+</html>

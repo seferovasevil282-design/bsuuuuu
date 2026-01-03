@@ -8,6 +8,8 @@ if (!token) {
 const user = JSON.parse(localStorage.getItem('user'));
 const urlParams = new URLSearchParams(window.location.search);
 const faculty = urlParams.get('faculty') || user.faculty;
+const privateUserId = urlParams.get('private'); // Şəxsi chat user ID
+const isPrivateChat = !!privateUserId; // Şəxsi chat rejimi
 
 // Update UI with user info
 if (user) {
@@ -22,9 +24,14 @@ if (user) {
     }
 }
 
-// Update faculty name
-document.getElementById('faculty-name').textContent = faculty;
-document.getElementById('chat-faculty-name').textContent = faculty;
+// Update faculty name or private chat header
+if (isPrivateChat) {
+    document.getElementById('faculty-name').textContent = 'Şəxsi Chat';
+    document.getElementById('chat-faculty-name').textContent = 'Şəxsi Mesajlaşma';
+} else {
+    document.getElementById('faculty-name').textContent = faculty;
+    document.getElementById('chat-faculty-name').textContent = faculty;
+}
 
 // Socket.IO connection
 const socket = io({
@@ -290,9 +297,12 @@ async function showUserProfile(userId) {
 }
 
 // Start private chat
+// Start private chat
 function startPrivateChat() {
-    alert('Şəxsi mesaj funksiyası tezliklə əlavə ediləcək');
-    closeModal('user-modal');
+    if (!selectedUserId) return;
+    
+    // Redirect to private chat URL
+    window.location.href = `/chat?private=${selectedUserId}`;
 }
 
 // Toggle block user

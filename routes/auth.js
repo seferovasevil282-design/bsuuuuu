@@ -194,4 +194,54 @@ router.get('/me', (req, res) => {
   }
 });
 
+// Profil yenilə
+router.put('/update-profile', (req, res) => {
+  const token = req.cookies.token || req.headers['authorization']?.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Token tapılmadı' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const { full_name, faculty, degree, course } = req.body;
+    
+    // Validasiya
+    if (!full_name || !faculty || !degree || !course) {
+      return res.status(400).json({ error: 'Bütün xanaları doldurun' });
+    }
+    
+    if (course < 1 || course > 6) {
+      return res.status(400).json({ error: 'Kurs 1-6 arasında olmalıdır' });
+    }
+    
+    // Update user
+    db.updateUserProfile(decoded.userId, {
+      full_name,
+      faculty,
+      degree,
+      course: parseInt(course)
+    });
+    
+    const updatedUser = db.getUserById(decoded.userId);
+    
+    res.json({
+      success: true,
+      message: 'Profil yeniləndi',
+      user: {
+        id: updatedUser.id,
+        full_name: updatedUser.full_name,
+        email: updatedUser.email,
+        faculty: updatedUser.faculty,
+        degree: updatedUser.degree,
+        course: updatedUser.course,
+        avatar: updatedUser.avatar
+      }
+    });
+  } catch (error) {
+    console.error('Profil yeniləmə xətası:', error);
+    return res.status(500).json({ error: 'Profil yenilənmədi' });
+  }
+});
+
 module.exports = router;

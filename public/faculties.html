@@ -248,6 +248,7 @@
             </div>
         </div>
         <div class="header-right">
+            <button class="btn btn-rules" onclick="showProfile()">👤 Profil</button>
             <button class="btn btn-rules" onclick="showRules()">📜 Qaydalar</button>
             <button class="btn btn-logout" onclick="logout()">🚪 Çıxış</button>
         </div>
@@ -361,10 +362,93 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>📜 Qaydalar</h2>
-                <span class="close-modal" onclick="closeRules()">&times;</span>
+                <span class="close-modal" onclick="closeModal('rules-modal')">&times;</span>
             </div>
             <div class="rules-content" id="rules-content">
                 Qaydalar yüklənir...
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>👤 Profil Parametrləri</h2>
+                <span class="close-modal" onclick="closeModal('profile-modal')">&times;</span>
+            </div>
+            
+            <!-- Avatar Upload Section -->
+            <div style="text-align: center; margin-bottom: 30px; padding-bottom: 30px; border-bottom: 2px solid #e0e0e0;">
+                <h3 style="margin-bottom: 15px; color: #333;">Profil Şəkli</h3>
+                <div class="user-avatar" id="profile-modal-avatar" style="width: 100px; height: 100px; font-size: 40px; margin: 0 auto 20px;">
+                    <span id="profile-modal-avatar-initials"></span>
+                </div>
+                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                <button class="btn" onclick="document.getElementById('avatar-upload').click()" style="display: inline-block; padding: 10px 20px;">
+                    📷 Şəkil Yüklə
+                </button>
+                <p style="color: #666; font-size: 12px; margin-top: 10px;">JPEG, PNG, GIF (max 5MB)</p>
+            </div>
+
+            <!-- Profile Edit Form -->
+            <div>
+                <h3 style="margin-bottom: 15px; color: #333;">Profil Məlumatları</h3>
+                <form id="profile-update-form">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Ad Soyad</label>
+                        <input type="text" id="profile-fullname" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Fakültə</label>
+                        <select id="profile-faculty" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;" required>
+                            <option value="Mexanika-riyaziyyat fakültəsi">Mexanika-riyaziyyat fakültəsi</option>
+                            <option value="Tətbiqi riyaziyyat və kibernetika fakültəsi">Tətbiqi riyaziyyat və kibernetika fakültəsi</option>
+                            <option value="Fizika fakültəsi">Fizika fakültəsi</option>
+                            <option value="Kimya fakültəsi">Kimya fakültəsi</option>
+                            <option value="Biologiya fakültəsi">Biologiya fakültəsi</option>
+                            <option value="Ekologiya və torpaqşünaslıq fakültəsi">Ekologiya və torpaqşünaslıq fakültəsi</option>
+                            <option value="Coğrafiya fakültəsi">Coğrafiya fakültəsi</option>
+                            <option value="Geologiya fakültəsi">Geologiya fakültəsi</option>
+                            <option value="Filologiya fakültəsi">Filologiya fakültəsi</option>
+                            <option value="Tarix fakültəsi">Tarix fakültəsi</option>
+                            <option value="Beynəlxalq münasibətlər və iqtisadiyyat fakültəsi">Beynəlxalq münasibətlər və iqtisadiyyat fakültəsi</option>
+                            <option value="Hüquq fakültəsi">Hüquq fakültəsi</option>
+                            <option value="Jurnalistika fakültəsi">Jurnalistika fakültəsi</option>
+                            <option value="İnformasiya və sənəd menecmenti fakültəsi">İnformasiya və sənəd menecmenti fakültəsi</option>
+                            <option value="Şərqşünaslıq fakültəsi">Şərqşünaslıq fakültəsi</option>
+                            <option value="Sosial elmlər və psixologiya fakültəsi">Sosial elmlər və psixologiya fakültəsi</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Dərəcə</label>
+                        <select id="profile-degree" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;" required>
+                            <option value="Bakalavr">Bakalavr</option>
+                            <option value="Magistr">Magistr</option>
+                            <option value="Doktorantura">Doktorantura</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600;">Kurs</label>
+                        <select id="profile-course" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px;" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; padding: 12px;">Yadda saxla</button>
+                </form>
+            </div>
+
+            <!-- Blocked Users Section -->
+            <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
+                <h3 style="margin-bottom: 15px; color: #333;">🚫 Əngəllənmiş İstifadəçilər</h3>
+                <div id="blocked-users-list" style="max-height: 200px; overflow-y: auto;">
+                    <p style="color: #999; text-align: center;">Yüklənir...</p>
+                </div>
             </div>
         </div>
     </div>

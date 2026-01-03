@@ -139,6 +139,16 @@ const userFunctions = {
 
   verifyPassword: (password, hashedPassword) => {
     return bcrypt.compareSync(password, hashedPassword);
+  },
+
+  updateUserProfile: (userId, profileData) => {
+    const { full_name, faculty, degree, course } = profileData;
+    const stmt = db.prepare(`
+      UPDATE users 
+      SET full_name = ?, faculty = ?, degree = ?, course = ?
+      WHERE id = ?
+    `);
+    stmt.run(full_name, faculty, degree, course, userId);
   }
 };
 

@@ -1,5 +1,18 @@
 # BSU Chat - Bakı Dövlət Universiteti Tələbələr Chat Platforması
 
+## 🌐 Canlı Demo
+
+- **GitHub Repository:** https://github.com/seferovasevil282-design/bsuuuuu
+- **Sandbox Demo:** https://3000-i5n7t42cimpg3d86j1phu-8f57ffe2.sandbox.novita.ai
+
+### Test Hesabları
+
+**Super Admin:**
+- İstifadəçi adı: `ursamajor`
+- Şifrə: `ursa618`
+
+**Test İstifadəçi üçün:** Qeydiyyatdan keçin (@bsu.edu.az email tələb olunur)
+
 ## 📋 Layihə haqqında
 
 BSU Chat - Bakı Dövlət Universiteti tələbələri üçün xüsusi olaraq hazırlanmış real-time mesajlaşma platformasıdır. 16 fakültə üzrə ayrı-ayrı chat otaqları ilə tələbələr öz fakültə yoldaşları ilə ünsiyyət qura bilərlər.

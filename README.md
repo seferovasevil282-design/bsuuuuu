@@ -5,6 +5,12 @@
 - **GitHub Repository:** https://github.com/seferovasevil282-design/bsuuuuu
 - **Sandbox Demo:** https://3000-i5n7t42cimpg3d86j1phu-8f57ffe2.sandbox.novita.ai
 
+### Deployment Platformaları
+
+**Production-Ready Deployment:**
+- **Render.com:** [Deployment Guide](./RENDER_DEPLOYMENT.md) - Tövsiyyə olunan platform
+- **Railway.com:** [Deployment Guide](./RAILWAY_DEPLOYMENT.md) - Alternativ platform
+
 ### Test Hesabları
 
 **Super Admin:**
